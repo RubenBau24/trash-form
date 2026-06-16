@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>Trash Can Cleaning</title>
+<style>
+  *{box-sizing:border-box;margin:0;padding:0}
+  body{font-family:system-ui,sans-serif;background:#f5f5f3;padding:1.5rem;color:#1a1a1a}
+  .wrap{max-width:500px;margin:0 auto;background:#fff;border-radius:16px;border:0.5px solid #ddd;padding:1.5rem}
+  .hero{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:center;background:#f5f5f3;border-radius:12px;padding:1rem;margin-bottom:1.5rem}
+  .hero img{width:100%;height:130px;object-fit:cover;border-radius:8px}
+  .hero-placeholder{width:100%;height:130px;border-radius:8px;background:#2C2C2A;display:flex;align-items:center;justify-content:center;font-size:48px}
+  .hero h3{font-size:14px;font-weight:600;margin-bottom:6px;line-height:1.4}
+  .hero p{font-size:12px;color:#666;line-height:1.5;margin-bottom:8px}
+  .badge{display:inline-block;background:#E1F5EE;color:#085041;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
+  .lang-toggle{display:flex;gap:8px;margin-bottom:1.25rem}
+  .lang-btn{padding:5px 16px;border-radius:8px;border:0.5px solid #ccc;background:transparent;cursor:pointer;font-size:13px;color:#666}
+  .lang-btn.active{background:#f0f0ee;color:#1a1a1a;font-weight:500;border-color:#999}
+  .slabel{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#999;margin:1.25rem 0 0.75rem}
+  .field{margin-bottom:1rem}
+  .field label{display:block;font-size:13px;color:#555;margin-bottom:4px}
+  .field input,.field select,.field textarea{width:100%;padding:9px 12px;border:0.5px solid #ccc;border-radius:8px;font-size:14px;color:#1a1a1a;background:#fff;outline:none}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:#1D9E75}
+  .field textarea{resize:vertical;min-height:80px;font-family:inherit}
+  .radio-group{display:flex;flex-direction:column;gap:8px}
+  .radio-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border:0.5px solid #ddd;border-radius:10px;cursor:pointer;font-size:14px;color:#1a1a1a;background:#fff;transition:all 0.15s}
+  .radio-opt input[type=radio]{display:none}
+  .radio-opt.sel-yes{border-color:#1D9E75;background:#E1F5EE;color:#085041}
+  .radio-opt.sel-maybe{border-color:#BA7517;background:#FAEEDA;color:#412402}
+  .radio-opt.sel-no{border-color:#E24B4A;background:#FCEBEB;color:#501313}
+  .divider{border:none;border-top:0.5px solid #eee;margin:1.25rem 0}
+  .hidden{display:none}
+  .visible{display:block;animation:fadeIn 0.2s ease}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+  .btn{width:100%;padding:12px;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-top:0.75rem;color:#fff}
+  .btn-green{background:#1D9E75}.btn-green:hover{background:#0F6E56}
+  .btn-red{background:#E24B4A}.btn-red:hover{background:#A32D2D}
+  .btn:disabled{opacity:0.6;cursor:not-allowed}
+  .success{display:none;text-align:center;padding:2.5rem 1rem}
+  .check{font-size:52px;margin-bottom:12px}
+  .success h3{font-size:18px;font-weight:600;margin-bottom:6px}
+  .success p{font-size:14px;color:#666;margin-bottom:16px}
+  .btn-ghost{padding:8px 20px;border-radius:8px;border:0.5px solid #ccc;background:transparent;cursor:pointer;font-size:13px;color:#555}
+  .status{font-size:13px;color:#666;text-align:center;margin-top:8px}
+  @media(max-width:420px){.hero{grid-template-columns:1fr}}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="lang-toggle">
+    <button class="lang-btn active" onclick="setLang('en')">English</button>
+    <button class="lang-btn" onclick="setLang('es')">Español</button>
+  </div>
+
+  <div class="hero">
+    <img src="trash-before-after.png" alt="Dirty vs clean trash can" onerror="this.outerHTML='<div class=hero-placeholder>🗑️</div>'"/>
+    <div>
+      <h3 id="hero-title">The cleanest bins in Utah — starting with your neighborhood.</h3>
+      <p id="hero-body">With our products we eliminate 99% of bacteria, odors, and pests from your bins — right at your curb, in minutes.</p>
+      <span class="badge" id="hero-badge">99% bacteria eliminated</span>
+    </div>
+  </div>
+
+  <div id="form-body">
+    <p class="slabel" id="lbl-sec">Are you interested in our service?</p>
+    <div class="radio-group">
+      <label class="radio-opt" id="opt-yes-el" onclick="pick('yes')">
+        <input type="radio" name="int" value="yes">
+        <span>✅</span><span id="opt-yes">Yes! Clean my bins</span>
+      </label>
+      <label class="radio-opt" id="opt-maybe-el" onclick="pick('maybe')">
+        <input type="radio" name="int" value="maybe">
+        <span>🕐</span><span id="opt-maybe">Maybe later — contact me</span>
+      </label>
+      <label class="radio-opt" id="opt-no-el" onclick="pick('no')">
+        <input type="radio" name="int" value="no">
+        <span>✖️</span><span id="opt-no">Not interested right now</span>
+      </label>
+    </div>
+
+    <div id="section-contact" class="hidden">
+      <hr class="divider"/>
+      <p class="slabel" id="lbl-contact">Contact info</p>
+      <div class="field"><label id="lbl-name">Full name</label><input type="text" id="f-name" placeholder="Jane Smith"/></div>
+      <div class="field"><label id="lbl-address">Home address</label><input type="text" id="f-address" placeholder="123 Maple St, Provo, UT"/></div>
+      <div class="field"><label id="lbl-phone">Phone number</label><input type="tel" id="f-phone" placeholder="(801) 555-0100"/></div>
+      <div class="field"><label id="lbl-email">Email (optional)</label><input type="email" id="f-email" placeholder="jane@email.com"/></div>
+      <div class="field">
+        <label id="lbl-bins">How many trash cans do you have?</label>
+        <select id="f-bins">
+          <option value="">— Select —</option>
+          <option>1</option><option>2</option><option>3+</option>
+        </select>
+      </div>
+      <button class="btn btn-green" id="btn-submit" onclick="submitYes()"><span id="btn-text">Submit →</span></button>
+      <p class="status" id="status-yes"></p>
+    </div>
+
+    <div id="section-no" class="hidden">
+      <hr class="divider"/>
+      <div class="field">
+        <label id="lbl-why">What's holding you back? (helps us improve)</label>
+        <textarea id="f-why" placeholder="e.g. Price, already have a service..."></textarea>
+      </div>
+      <div class="field"><label id="lbl-name-no">Name (optional)</label><input type="text" id="f-name-no" placeholder="Jane Smith"/></div>
+      <button class="btn btn-red" id="btn-no" onclick="submitNo()"><span id="btn-no-text">Send feedback →</span></button>
+      <p class="status" id="status-no"></p>
+    </div>
+  </div>
+
+  <div class="success" id="success-msg">
+    <div class="check">✓</div>
+    <h3 id="s-title">Thank you!</h3>
+    <p id="s-body" style="color:#666;font-size:14px">We'll be in touch soon.</p>
+    <button class="btn-ghost" onclick="rst()" id="btn-rst">New entry</button>
+  </div>
+</div>
+
+<script>
+const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyfNvFi9S3FH8L5hYuae8DpRjOnYjGJkWXcjHzswhvO7wS44Z6cTQQs1VZ6tkp99zSm/exec";
+
+const T={
+  en:{title:"The cleanest bins in Utah — starting with your neighborhood.",body:"With our products we eliminate 99% of bacteria, odors, and pests from your bins — right at your curb, in minutes.",badge:"99% bacteria eliminated",sec:"Are you interested in our service?",yes:"Yes! Clean my bins",maybe:"Maybe later — contact me",no:"Not interested right now",contact:"Contact info",name:"Full name",namePh:"Jane Smith",address:"Home address",addressPh:"123 Maple St, Provo, UT",phone:"Phone number",phonePh:"(801) 555-0100",email:"Email (optional)",emailPh:"jane@email.com",bins:"How many trash cans do you have?",why:"What's holding you back? (helps us improve)",whyPh:"e.g. Price, already have a service...",nameNo:"Name (optional)",btn:"Submit →",btnNo:"Send feedback →",sending:"Sending...",st:"Thank you!",sb:"We'll be in touch soon.",rst:"New entry"},
+  es:{title:"Los botes más limpios de Utah — empezando por tu vecindario.",body:"Con nuestros productos eliminamos el 99% de bacterias, olores y plagas de tus botes — en tu banqueta, en minutos.",badge:"99% de bacterias eliminadas",sec:"¿Te interesa nuestro servicio?",yes:"¡Sí! Limpia mis botes",maybe:"Quizás después — contáctenme",no:"Ahorita no, gracias",contact:"Datos de contacto",name:"Nombre completo",namePh:"Juan García",address:"Dirección",addressPh:"123 Maple St, Provo, UT",phone:"Número de teléfono",phonePh:"(801) 555-0100",email:"Correo electrónico (opcional)",emailPh:"juan@correo.com",bins:"¿Cuántos botes de basura tienes?",why:"¿Por qué no te interesa? (nos ayuda a mejorar)",whyPh:"Ej. El precio, ya tengo servicio...",nameNo:"Nombre (opcional)",btn:"Enviar →",btnNo:"Enviar comentario →",sending:"Enviando...",st:"¡Gracias!",sb:"Nos pondremos en contacto pronto.",rst:"Nueva entrada"}
+};
+let lang='en', interest='';
+
+function setLang(l){
+  lang=l;
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.trim()===(l==='en'?'English':'Español')));
+  const d=T[l];
+  document.getElementById('hero-title').textContent=d.title;
+  document.getElementById('hero-body').textContent=d.body;
+  document.getElementById('hero-badge').textContent=d.badge;
+  document.getElementById('lbl-sec').textContent=d.sec;
+  document.getElementById('opt-yes').textContent=d.yes;
+  document.getElementById('opt-maybe').textContent=d.maybe;
+  document.getElementById('opt-no').textContent=d.no;
+  document.getElementById('lbl-contact').textContent=d.contact;
+  document.getElementById('lbl-name').textContent=d.name;
+  document.getElementById('f-name').placeholder=d.namePh;
+  document.getElementById('lbl-address').textContent=d.address;
+  document.getElementById('f-address').placeholder=d.addressPh;
+  document.getElementById('lbl-phone').textContent=d.phone;
+  document.getElementById('f-phone').placeholder=d.phonePh;
+  document.getElementById('lbl-email').textContent=d.email;
+  document.getElementById('f-email').placeholder=d.emailPh;
+  document.getElementById('lbl-bins').textContent=d.bins;
+  document.getElementById('lbl-why').textContent=d.why;
+  document.getElementById('f-why').placeholder=d.whyPh;
+  document.getElementById('lbl-name-no').textContent=d.nameNo;
+  document.getElementById('btn-text').textContent=d.btn;
+  document.getElementById('btn-no-text').textContent=d.btnNo;
+  document.getElementById('s-title').textContent=d.st;
+  document.getElementById('s-body').textContent=d.sb;
+  document.getElementById('btn-rst').textContent=d.rst;
+}
+
+function pick(val){
+  interest=val;
+  document.querySelectorAll('.radio-opt').forEach(o=>o.classList.remove('sel-yes','sel-maybe','sel-no'));
+  const sc=document.getElementById('section-contact');
+  const sn=document.getElementById('section-no');
+  if(val==='yes'){
+    document.getElementById('opt-yes-el').classList.add('sel-yes');
+    sc.className='visible'; sn.className='hidden';
+  } else if(val==='maybe'){
+    document.getElementById('opt-maybe-el').classList.add('sel-maybe');
+    sc.className='visible'; sn.className='hidden';
+  } else {
+    document.getElementById('opt-no-el').classList.add('sel-no');
+    sc.className='hidden'; sn.className='visible';
+  }
+}
+
+function sendData(payload, btnId, statusId){
+  const btn=document.getElementById(btnId);
+  const status=document.getElementById(statusId);
+  btn.disabled=true;
+  btn.textContent=T[lang].sending;
+  status.textContent='';
+  fetch(SCRIPT_URL, {
+    method:'POST',
+    mode:'no-cors',
+    headers:{'Content-Type':'application/json'},
+    body:JSON.stringify(payload)
+  }).then(()=>{
+    document.getElementById('form-body').style.display='none';
+    document.getElementById('success-msg').style.display='block';
+  }).catch(()=>{
+    btn.disabled=false;
+    btn.textContent=lang==='en'?'Submit →':'Enviar →';
+    status.textContent=lang==='en'?'Error sending. Try again.':'Error al enviar. Intenta de nuevo.';
+  });
+}
+
+function submitYes(){
+  const n=document.getElementById('f-name').value.trim();
+  const p=document.getElementById('f-phone').value.trim();
+  if(!n||!p){alert(lang==='en'?'Please enter name and phone.':'Por favor ingresa nombre y teléfono.');return;}
+  sendData({
+    interest, lang,
+    name:n,
+    address:document.getElementById('f-address').value.trim(),
+    phone:p,
+    email:document.getElementById('f-email').value.trim(),
+    bins:document.getElementById('f-bins').value,
+    why:''
+  },'btn-submit','status-yes');
+}
+
+function submitNo(){
+  sendData({
+    interest:'no', lang,
+    name:document.getElementById('f-name-no').value.trim(),
+    address:'', phone:'', email:'', bins:'',
+    why:document.getElementById('f-why').value.trim()
+  },'btn-no','status-no');
+}
+
+function rst(){
+  ['f-name','f-address','f-phone','f-email','f-why','f-name-no'].forEach(id=>document.getElementById(id).value='');
+  document.getElementById('f-bins').value='';
+  document.querySelectorAll('.radio-opt').forEach(o=>o.classList.remove('sel-yes','sel-maybe','sel-no'));
+  document.getElementById('section-contact').className='hidden';
+  document.getElementById('section-no').className='hidden';
+  document.getElementById('form-body').style.display='block';
+  document.getElementById('success-msg').style.display='none';
+  document.getElementById('btn-submit').disabled=false;
+  document.getElementById('btn-text').textContent=T[lang].btn;
+  interest='';
+}
+</script>
+</body>
+</html>
