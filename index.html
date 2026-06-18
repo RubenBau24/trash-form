@@ -3,132 +3,321 @@
 <head>
 <meta charset="UTF-8"/>
 <meta name="viewport" content="width=device-width, initial-scale=1"/>
-<title>Trash Can Cleaning</title>
+<title>Fresh Start Trash Bin Cleaning</title>
 <style>
   *{box-sizing:border-box;margin:0;padding:0}
-  body{font-family:system-ui,sans-serif;background:#f5f5f3;padding:1.5rem;color:#1a1a1a}
-  .wrap{max-width:500px;margin:0 auto;background:#fff;border-radius:16px;border:0.5px solid #ddd;padding:1.5rem}
-  .hero{display:grid;grid-template-columns:1fr 1fr;gap:14px;align-items:center;background:#f5f5f3;border-radius:12px;padding:1rem;margin-bottom:1.5rem}
-  .hero img{width:100%;height:130px;object-fit:cover;border-radius:8px}
-  .hero-placeholder{width:100%;height:130px;border-radius:8px;background:#2C2C2A;display:flex;align-items:center;justify-content:center;font-size:48px}
-  .hero h3{font-size:14px;font-weight:600;margin-bottom:6px;line-height:1.4}
-  .hero p{font-size:12px;color:#666;line-height:1.5;margin-bottom:8px}
-  .badge{display:inline-block;background:#E1F5EE;color:#085041;font-size:11px;font-weight:600;padding:3px 10px;border-radius:20px}
-  .lang-toggle{display:flex;gap:8px;margin-bottom:1.25rem}
-  .lang-btn{padding:5px 16px;border-radius:8px;border:0.5px solid #ccc;background:transparent;cursor:pointer;font-size:13px;color:#666}
-  .lang-btn.active{background:#f0f0ee;color:#1a1a1a;font-weight:500;border-color:#999}
-  .slabel{font-size:10px;font-weight:600;text-transform:uppercase;letter-spacing:0.06em;color:#999;margin:1.25rem 0 0.75rem}
-  .field{margin-bottom:1rem}
-  .field label{display:block;font-size:13px;color:#555;margin-bottom:4px}
-  .field input,.field select,.field textarea{width:100%;padding:9px 12px;border:0.5px solid #ccc;border-radius:8px;font-size:14px;color:#1a1a1a;background:#fff;outline:none}
-  .field input:focus,.field select:focus,.field textarea:focus{border-color:#1D9E75}
-  .field textarea{resize:vertical;min-height:80px;font-family:inherit}
-  .radio-group{display:flex;flex-direction:column;gap:8px}
-  .radio-opt{display:flex;align-items:center;gap:10px;padding:10px 14px;border:0.5px solid #ddd;border-radius:10px;cursor:pointer;font-size:14px;color:#1a1a1a;background:#fff;transition:all 0.15s}
+  body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#f0f0ee;min-height:100vh;display:flex;align-items:flex-start;justify-content:center;padding:2rem 1rem}
+  .card{width:100%;max-width:600px;background:#fff;border-radius:20px;overflow:hidden;box-shadow:0 4px 24px rgba(0,0,0,0.08)}
+  .hero{position:relative;width:100%;height:220px;overflow:hidden}
+  .hero img{width:100%;height:100%;object-fit:cover;display:block}
+  .hero-overlay{position:absolute;inset:0;background:linear-gradient(to right,rgba(0,0,0,0.55) 0%,rgba(0,0,0,0.1) 100%);display:flex;flex-direction:column;justify-content:center;padding:2rem}
+  .hero-overlay h1{color:#fff;font-size:22px;font-weight:700;line-height:1.3;max-width:320px;margin-bottom:8px;text-shadow:0 1px 4px rgba(0,0,0,0.4)}
+  .hero-overlay p{color:rgba(255,255,255,0.9);font-size:14px;line-height:1.5;max-width:300px;margin-bottom:12px;text-shadow:0 1px 3px rgba(0,0,0,0.4)}
+  .badge{display:inline-block;background:#1D9E75;color:#fff;font-size:12px;font-weight:600;padding:4px 12px;border-radius:20px}
+  .body{padding:1.75rem}
+  .lang-toggle{display:flex;gap:8px;margin-bottom:1.5rem}
+  .lang-btn{padding:7px 20px;border-radius:30px;border:1.5px solid #ddd;background:#fff;cursor:pointer;font-size:13px;font-weight:500;color:#888;transition:all 0.15s}
+  .lang-btn.active{background:#1D9E75;color:#fff;border-color:#1D9E75}
+  .slabel{font-size:11px;font-weight:700;text-transform:uppercase;letter-spacing:0.08em;color:#aaa;margin-bottom:12px;display:block}
+  .radio-group{display:flex;flex-direction:column;gap:10px}
+  .radio-opt{display:flex;align-items:center;gap:12px;padding:14px 16px;border:1.5px solid #eee;border-radius:12px;cursor:pointer;font-size:15px;font-weight:500;color:#333;background:#fff;transition:all 0.15s}
+  .radio-opt:hover{border-color:#ccc}
   .radio-opt input[type=radio]{display:none}
+  .radio-opt .icon{font-size:20px;width:28px;text-align:center}
   .radio-opt.sel-yes{border-color:#1D9E75;background:#E1F5EE;color:#085041}
-  .radio-opt.sel-maybe{border-color:#BA7517;background:#FAEEDA;color:#412402}
-  .radio-opt.sel-no{border-color:#E24B4A;background:#FCEBEB;color:#501313}
-  .divider{border:none;border-top:0.5px solid #eee;margin:1.25rem 0}
+  .radio-opt.sel-maybe{border-color:#E8A020;background:#FEF3E2;color:#7A4500}
+  .radio-opt.sel-no{border-color:#E24B4A;background:#FEF0F0;color:#7A1515}
+  .divider{border:none;border-top:1.5px solid #f0f0ee;margin:1.5rem 0}
+  .field{margin-bottom:1.1rem}
+  .field label{display:block;font-size:13px;font-weight:600;color:#555;margin-bottom:6px}
+  .field input,.field select,.field textarea{width:100%;padding:12px 14px;border:1.5px solid #e8e8e8;border-radius:10px;font-size:15px;color:#1a1a1a;background:#fafafa;outline:none;transition:border-color 0.15s;font-family:inherit}
+  .field input:focus,.field select:focus,.field textarea:focus{border-color:#1D9E75;background:#fff}
+  .field textarea{resize:vertical;min-height:90px}
   .hidden{display:none}
-  .visible{display:block;animation:fadeIn 0.2s ease}
-  @keyframes fadeIn{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
-  .btn{width:100%;padding:12px;border:none;border-radius:10px;font-size:15px;font-weight:600;cursor:pointer;margin-top:0.75rem;color:#fff}
+  .visible{display:block;animation:fadeUp 0.22s ease}
+  @keyframes fadeUp{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+  .btn{width:100%;padding:14px;border:none;border-radius:12px;font-size:16px;font-weight:700;cursor:pointer;margin-top:0.5rem;color:#fff;transition:background 0.15s}
   .btn-green{background:#1D9E75}.btn-green:hover{background:#0F6E56}
-  .btn-red{background:#E24B4A}.btn-red:hover{background:#A32D2D}
-  .btn:disabled{opacity:0.6;cursor:not-allowed}
-  .success{display:none;text-align:center;padding:2.5rem 1rem}
-  .check{font-size:52px;margin-bottom:12px}
-  .success h3{font-size:18px;font-weight:600;margin-bottom:6px}
-  .success p{font-size:14px;color:#666;margin-bottom:16px}
-  .btn-ghost{padding:8px 20px;border-radius:8px;border:0.5px solid #ccc;background:transparent;cursor:pointer;font-size:13px;color:#555}
-  .status{font-size:13px;color:#666;text-align:center;margin-top:8px}
-  @media(max-width:420px){.hero{grid-template-columns:1fr}}
+  .btn-red{background:#E24B4A}.btn-red:hover{background:#B03030}
+  .btn:disabled{opacity:0.55;cursor:not-allowed}
+  .status-msg{font-size:13px;color:#888;text-align:center;margin-top:8px;min-height:18px}
+  .success{display:none;text-align:center;padding:3rem 2rem}
+  .success .check-circle{width:72px;height:72px;background:#E1F5EE;border-radius:50%;display:flex;align-items:center;justify-content:center;margin:0 auto 1rem;font-size:36px}
+  .success h2{font-size:22px;font-weight:700;margin-bottom:8px;color:#085041}
+  .success p{font-size:15px;color:#666;margin-bottom:1.5rem;line-height:1.5}
+  .btn-ghost{padding:10px 24px;border-radius:10px;border:1.5px solid #ddd;background:#fff;cursor:pointer;font-size:14px;font-weight:500;color:#555}
+
+  /* PLANS */
+  .plans{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-bottom:1.25rem}
+  .plan{border:1.5px solid #eee;border-radius:14px;padding:1rem 0.75rem;text-align:center;cursor:pointer;transition:all 0.15s;position:relative;background:#fafafa}
+  .plan:hover{border-color:#ccc}
+  .plan.selected{border-color:#1D9E75;background:#E1F5EE}
+  .plan-popular{position:absolute;top:-10px;left:50%;transform:translateX(-50%);background:#1D9E75;color:#fff;font-size:9px;font-weight:700;padding:2px 10px;border-radius:20px;white-space:nowrap;text-transform:uppercase;letter-spacing:0.06em}
+  .plan-name{font-size:11px;font-weight:700;color:#999;text-transform:uppercase;letter-spacing:0.08em;margin-bottom:6px}
+  .plan-price{font-size:28px;font-weight:900;color:#1a1a1a;letter-spacing:-0.03em;line-height:1}
+  .plan-price sup{font-size:13px;vertical-align:top;margin-top:4px;color:#888}
+  .plan-desc{font-size:11px;color:#888;margin-top:6px;line-height:1.4}
+  .plan.selected .plan-name,.plan.selected .plan-price{color:#085041}
+  .plan.selected .plan-desc{color:#1D9E75}
+
+  /* DAYS OF WEEK */
+  .days-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin-bottom:0.5rem}
+  .day-opt{border:1.5px solid #eee;border-radius:10px;padding:10px 8px;text-align:center;cursor:pointer;font-size:13px;font-weight:600;color:#555;background:#fafafa;transition:all 0.15s}
+  .day-opt:hover{border-color:#ccc}
+  .day-opt.selected{border-color:#1D9E75;background:#E1F5EE;color:#085041}
+
+  /* CALENDAR */
+  .calendar{border:1.5px solid #e8e8e8;border-radius:12px;overflow:hidden;margin-bottom:0.5rem}
+  .cal-header{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:#fafafa;border-bottom:1.5px solid #eee}
+  .cal-header span{font-size:14px;font-weight:700;color:#1a1a1a}
+  .cal-nav{background:transparent;border:none;cursor:pointer;font-size:18px;color:#888;padding:2px 8px;border-radius:6px;line-height:1}
+  .cal-nav:hover{background:#eee;color:#333}
+  .cal-weekdays{display:grid;grid-template-columns:repeat(7,1fr);background:#f5f5f3}
+  .cal-weekday{font-size:11px;font-weight:700;color:#aaa;text-align:center;padding:8px 0;text-transform:uppercase;letter-spacing:0.05em}
+  .cal-days{display:grid;grid-template-columns:repeat(7,1fr);gap:2px;padding:8px}
+  .cal-day{aspect-ratio:1;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:500;border-radius:8px;cursor:pointer;color:#333;transition:all 0.15s}
+  .cal-day:hover:not(.disabled):not(.empty){background:#E1F5EE;color:#085041}
+  .cal-day.selected{background:#1D9E75;color:#fff;font-weight:700}
+  .cal-day.disabled{color:#ddd;cursor:not-allowed}
+  .cal-day.empty{cursor:default}
+  .cal-day.today{border:1.5px solid #1D9E75;color:#1D9E75}
+  .cal-day.today.selected{border-color:#1D9E75;color:#fff}
+
+  /* TIP */
+  .tip-box{background:#FEF3E2;border:1.5px solid #E8A02040;border-radius:10px;padding:10px 14px;margin-bottom:1rem;font-size:13px;color:#7A4500;line-height:1.5}
+  .tip-box strong{font-weight:700}
+
+  @media(max-width:480px){
+    .hero-overlay h1{font-size:18px}
+    .hero{height:180px}
+    body{padding:0}
+    .card{border-radius:0;min-height:100vh}
+    .plans{grid-template-columns:1fr}
+    .days-grid{grid-template-columns:repeat(3,1fr)}
+  }
 </style>
 </head>
 <body>
-<div class="wrap">
-  <div class="lang-toggle">
-    <button class="lang-btn active" onclick="setLang('en')">English</button>
-    <button class="lang-btn" onclick="setLang('es')">Español</button>
-  </div>
-
+<div class="card">
   <div class="hero">
-    <img src="trash-before-after.png" alt="Dirty vs clean trash can" onerror="this.outerHTML='<div class=hero-placeholder>🗑️</div>'"/>
-    <div>
-      <h3 id="hero-title">The cleanest bins in Utah — starting with your neighborhood.</h3>
-      <p id="hero-body">With our products we eliminate 99% of bacteria, odors, and pests from your bins — right at your curb, in minutes.</p>
-      <span class="badge" id="hero-badge">99% bacteria eliminated</span>
+    <img src="trash-before-after.png" alt="Before after"
+      onerror="this.style.display='none';document.getElementById('hf').style.display='flex'"/>
+    <div id="hf" style="display:none;width:100%;height:100%;background:linear-gradient(135deg,#1a1a1a,#2d4a3e);align-items:center;justify-content:center;font-size:72px">🗑️</div>
+    <div class="hero-overlay">
+      <h1 id="hero-title">The cleanest bins in Utah — starting with your neighborhood.</h1>
+      <p id="hero-body">With our products we eliminate 99% of bacteria, odors, and pests.</p>
+      <span class="badge" id="hero-badge">✓ 99% bacteria eliminated</span>
     </div>
   </div>
 
-  <div id="form-body">
-    <p class="slabel" id="lbl-sec">Are you interested in our service?</p>
-    <div class="radio-group">
-      <label class="radio-opt" id="opt-yes-el" onclick="pick('yes')">
-        <input type="radio" name="int" value="yes">
-        <span>✅</span><span id="opt-yes">Yes! Clean my bins</span>
-      </label>
-      <label class="radio-opt" id="opt-maybe-el" onclick="pick('maybe')">
-        <input type="radio" name="int" value="maybe">
-        <span>🕐</span><span id="opt-maybe">Maybe later — contact me</span>
-      </label>
-      <label class="radio-opt" id="opt-no-el" onclick="pick('no')">
-        <input type="radio" name="int" value="no">
-        <span>✖️</span><span id="opt-no">Not interested right now</span>
-      </label>
+  <div class="body">
+    <div class="lang-toggle">
+      <button class="lang-btn active" onclick="setLang('en')">🇺🇸 English</button>
+      <button class="lang-btn" onclick="setLang('es')">🇲🇽 Español</button>
     </div>
 
-    <div id="section-contact" class="hidden">
-      <hr class="divider"/>
-      <p class="slabel" id="lbl-contact">Contact info</p>
-      <div class="field"><label id="lbl-name">Full name</label><input type="text" id="f-name" placeholder="Jane Smith"/></div>
-      <div class="field"><label id="lbl-address">Home address</label><input type="text" id="f-address" placeholder="123 Maple St, Provo, UT"/></div>
-      <div class="field"><label id="lbl-phone">Phone number</label><input type="tel" id="f-phone" placeholder="(801) 555-0100"/></div>
-      <div class="field"><label id="lbl-email">Email (optional)</label><input type="email" id="f-email" placeholder="jane@email.com"/></div>
-      <div class="field">
-        <label id="lbl-bins">How many trash cans do you have?</label>
-        <select id="f-bins">
-          <option value="">— Select —</option>
-          <option>1</option><option>2</option><option>3+</option>
-        </select>
+    <div id="form-body">
+
+      <!-- STEP 1: INTEREST -->
+      <span class="slabel" id="lbl-sec">Are you interested in our service?</span>
+      <div class="radio-group">
+        <label class="radio-opt" id="opt-yes-el" onclick="pick('yes')">
+          <input type="radio" name="int" value="yes">
+          <span class="icon">✅</span><span id="opt-yes">Yes! Clean my bins</span>
+        </label>
+        <label class="radio-opt" id="opt-maybe-el" onclick="pick('maybe')">
+          <input type="radio" name="int" value="maybe">
+          <span class="icon">🕐</span><span id="opt-maybe">Maybe later — contact me</span>
+        </label>
+        <label class="radio-opt" id="opt-no-el" onclick="pick('no')">
+          <input type="radio" name="int" value="no">
+          <span class="icon">✖️</span><span id="opt-no">Not interested right now</span>
+        </label>
       </div>
-      <button class="btn btn-green" id="btn-submit" onclick="submitYes()"><span id="btn-text">Submit →</span></button>
-      <p class="status" id="status-yes"></p>
-    </div>
 
-    <div id="section-no" class="hidden">
-      <hr class="divider"/>
-      <div class="field">
-        <label id="lbl-why">What's holding you back? (helps us improve)</label>
-        <textarea id="f-why" placeholder="e.g. Price, already have a service..."></textarea>
+      <!-- STEP 2: PLANS -->
+      <div id="section-pricing" class="hidden">
+        <hr class="divider"/>
+        <span class="slabel" id="lbl-plans">Choose your plan</span>
+        <div class="plans">
+          <div class="plan" id="plan-once" onclick="selectPlan('once')">
+            <div class="plan-name" id="pn1">One-time</div>
+            <div class="plan-price"><sup>$</sup>15</div>
+            <div class="plan-desc" id="pd1">per bin · no commitment</div>
+          </div>
+          <div class="plan" id="plan-monthly" onclick="selectPlan('monthly')">
+            <div class="plan-popular" id="pp2">BEST VALUE</div>
+            <div class="plan-name" id="pn2">Monthly</div>
+            <div class="plan-price"><sup>$</sup>30</div>
+            <div class="plan-desc" id="pd2">up to 3 bins · every month</div>
+          </div>
+          <div class="plan" id="plan-bimonthly" onclick="selectPlan('bimonthly')">
+            <div class="plan-name" id="pn3">Bimonthly</div>
+            <div class="plan-price"><sup>$</sup>45</div>
+            <div class="plan-desc" id="pd3">up to 3 bins · every 2 months</div>
+          </div>
+        </div>
       </div>
-      <div class="field"><label id="lbl-name-no">Name (optional)</label><input type="text" id="f-name-no" placeholder="Jane Smith"/></div>
-      <button class="btn btn-red" id="btn-no" onclick="submitNo()"><span id="btn-no-text">Send feedback →</span></button>
-      <p class="status" id="status-no"></p>
-    </div>
-  </div>
 
-  <div class="success" id="success-msg">
-    <div class="check">✓</div>
-    <h3 id="s-title">Thank you!</h3>
-    <p id="s-body" style="color:#666;font-size:14px">We'll be in touch soon.</p>
-    <button class="btn-ghost" onclick="rst()" id="btn-rst">New entry</button>
+      <!-- STEP 3: CONTACT -->
+      <div id="section-contact" class="hidden">
+        <hr class="divider"/>
+        <span class="slabel" id="lbl-contact">Contact info</span>
+        <div class="field"><label id="lbl-name">Full name *</label><input type="text" id="f-name" placeholder="Jane Smith"/></div>
+        <div class="field"><label id="lbl-address">Home address</label><input type="text" id="f-address" placeholder="123 Maple St, Provo, UT"/></div>
+        <div class="field"><label id="lbl-phone">Phone number *</label><input type="tel" id="f-phone" placeholder="(801) 555-0100"/></div>
+        <div class="field"><label id="lbl-email">Email (optional)</label><input type="email" id="f-email" placeholder="jane@email.com"/></div>
+        <div class="field">
+          <label id="lbl-bins">How many trash cans do you have?</label>
+          <select id="f-bins">
+            <option value="">— Select —</option>
+            <option>1</option><option>2</option><option>3+</option>
+          </select>
+        </div>
+      </div>
+
+      <!-- STEP 4: TRASH DAY + DATE -->
+      <div id="section-date" class="hidden">
+        <hr class="divider"/>
+        <span class="slabel" id="lbl-trash-day">What day does your trash get picked up?</span>
+        <div class="days-grid" id="trash-days-grid">
+          <!-- filled by JS -->
+        </div>
+
+        <hr class="divider"/>
+        <span class="slabel" id="lbl-date">Choose your cleaning date</span>
+        <div class="tip-box" id="tip-box">
+          💡 <strong id="tip-strong">Tip:</strong> <span id="tip-text">We recommend choosing the same day or the day after your trash pickup for best results.</span>
+        </div>
+
+        <div class="calendar">
+          <div class="cal-header">
+            <button class="cal-nav" onclick="prevMonth()">←</button>
+            <span id="cal-title"></span>
+            <button class="cal-nav" onclick="nextMonth()">→</button>
+          </div>
+          <div class="cal-weekdays" id="cal-weekdays"></div>
+          <div class="cal-days" id="cal-days"></div>
+        </div>
+        <p style="font-size:13px;color:#aaa;text-align:center;margin-bottom:1rem" id="selected-date-label"></p>
+
+        <button class="btn btn-green" id="btn-submit" onclick="submitYes()"><span id="btn-text">Submit →</span></button>
+        <p class="status-msg" id="status-yes"></p>
+      </div>
+
+      <!-- MAYBE -->
+      <div id="section-maybe" class="hidden">
+        <hr class="divider"/>
+        <span class="slabel" id="lbl-contact-maybe">Contact info</span>
+        <div class="field"><label id="lbl-name-m">Full name *</label><input type="text" id="f-name-m" placeholder="Jane Smith"/></div>
+        <div class="field"><label id="lbl-phone-m">Phone number *</label><input type="tel" id="f-phone-m" placeholder="(801) 555-0100"/></div>
+        <button class="btn btn-green" id="btn-maybe" onclick="submitMaybe()"><span id="btn-maybe-text">Submit →</span></button>
+        <p class="status-msg" id="status-maybe"></p>
+      </div>
+
+      <!-- NO -->
+      <div id="section-no" class="hidden">
+        <hr class="divider"/>
+        <div class="field">
+          <label id="lbl-why">What's holding you back?</label>
+          <textarea id="f-why" placeholder="e.g. Price, already have a service..."></textarea>
+        </div>
+        <div class="field"><label id="lbl-name-no">Name (optional)</label><input type="text" id="f-name-no" placeholder="Jane Smith"/></div>
+        <button class="btn btn-red" id="btn-no" onclick="submitNo()"><span id="btn-no-text">Send feedback →</span></button>
+        <p class="status-msg" id="status-no"></p>
+      </div>
+
+    </div><!-- end form-body -->
+
+    <div class="success" id="success-msg">
+      <div class="check-circle">✓</div>
+      <h2 id="s-title">Thank you!</h2>
+      <p id="s-body" style="color:#666;font-size:14px">We'll be in touch soon.</p>
+      <button class="btn-ghost" onclick="rst()" id="btn-rst">New entry</button>
+    </div>
   </div>
 </div>
 
 <script>
-const SCRIPT_URL = "https://script.google.com/macros/s/AKfycbyfNvFi9S3FH8L5hYuae8DpRjOnYjGJkWXcjHzswhvO7wS44Z6cTQQs1VZ6tkp99zSm/exec";
+const SCRIPT_URL="https://script.google.com/macros/s/AKfycbyfNvFi9S3FH8L5hYuae8DpRjOnYjGJkWXcjHzswhvO7wS44Z6cTQQs1VZ6tkp99zSm/exec";
 
 const T={
-  en:{title:"The cleanest bins in Utah — starting with your neighborhood.",body:"With our products we eliminate 99% of bacteria, odors, and pests from your bins — right at your curb, in minutes.",badge:"99% bacteria eliminated",sec:"Are you interested in our service?",yes:"Yes! Clean my bins",maybe:"Maybe later — contact me",no:"Not interested right now",contact:"Contact info",name:"Full name",namePh:"Jane Smith",address:"Home address",addressPh:"123 Maple St, Provo, UT",phone:"Phone number",phonePh:"(801) 555-0100",email:"Email (optional)",emailPh:"jane@email.com",bins:"How many trash cans do you have?",why:"What's holding you back? (helps us improve)",whyPh:"e.g. Price, already have a service...",nameNo:"Name (optional)",btn:"Submit →",btnNo:"Send feedback →",sending:"Sending...",st:"Thank you!",sb:"We'll be in touch soon.",rst:"New entry"},
-  es:{title:"Los botes más limpios de Utah — empezando por tu vecindario.",body:"Con nuestros productos eliminamos el 99% de bacterias, olores y plagas de tus botes — en tu banqueta, en minutos.",badge:"99% de bacterias eliminadas",sec:"¿Te interesa nuestro servicio?",yes:"¡Sí! Limpia mis botes",maybe:"Quizás después — contáctenme",no:"Ahorita no, gracias",contact:"Datos de contacto",name:"Nombre completo",namePh:"Juan García",address:"Dirección",addressPh:"123 Maple St, Provo, UT",phone:"Número de teléfono",phonePh:"(801) 555-0100",email:"Correo electrónico (opcional)",emailPh:"juan@correo.com",bins:"¿Cuántos botes de basura tienes?",why:"¿Por qué no te interesa? (nos ayuda a mejorar)",whyPh:"Ej. El precio, ya tengo servicio...",nameNo:"Nombre (opcional)",btn:"Enviar →",btnNo:"Enviar comentario →",sending:"Enviando...",st:"¡Gracias!",sb:"Nos pondremos en contacto pronto.",rst:"Nueva entrada"}
+  en:{
+    title:"The cleanest bins in Utah — starting with your neighborhood.",
+    body:"With our products we eliminate 99% of bacteria, odors, and pests.",
+    badge:"✓ 99% bacteria eliminated",
+    sec:"Are you interested in our service?",
+    yes:"Yes! Clean my bins",maybe:"Maybe later — contact me",no:"Not interested right now",
+    plans:"Choose your plan",
+    pn1:"One-time",pd1:"per bin · no commitment",
+    pp2:"BEST VALUE",pn2:"Monthly",pd2:"up to 3 bins · every month",
+    pn3:"Bimonthly",pd3:"up to 3 bins · every 2 months",
+    contact:"Contact info",contactMaybe:"Contact info",
+    name:"Full name *",namePh:"Jane Smith",
+    address:"Home address",addressPh:"123 Maple St, Provo, UT",
+    phone:"Phone number *",phonePh:"(801) 555-0100",
+    email:"Email (optional)",emailPh:"jane@email.com",
+    bins:"How many trash cans do you have?",
+    trashDay:"What day does your trash get picked up?",
+    days:["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday"],
+    dateLabel:"Choose your cleaning date",
+    tipStrong:"Tip:",
+    tipText:"We recommend choosing the same day or the day after your trash pickup for best results.",
+    weekdays:["Sun","Mon","Tue","Wed","Thu","Fri","Sat"],
+    noDateSelected:"No date selected",
+    selectedDate:"Selected:",
+    why:"What's holding you back?",whyPh:"e.g. Price, already have a service...",
+    nameNo:"Name (optional)",
+    btn:"Submit →",btnNo:"Send feedback →",sending:"Sending...",
+    st:"Thank you!",sb:"We'll be in touch soon.",rst:"New entry",
+    errPlan:"Please select a plan.",errContact:"Please enter name and phone.",errDate:"Please choose a cleaning date."
+  },
+  es:{
+    title:"Los botes más limpios de Utah — empezando por tu vecindario.",
+    body:"Con nuestros productos eliminamos el 99% de bacterias, olores y plagas.",
+    badge:"✓ 99% de bacterias eliminadas",
+    sec:"¿Te interesa nuestro servicio?",
+    yes:"¡Sí! Limpia mis botes",maybe:"Quizás después — contáctenme",no:"Ahorita no, gracias",
+    plans:"Elige tu plan",
+    pn1:"Una vez",pd1:"por bote · sin compromiso",
+    pp2:"MEJOR VALOR",pn2:"Mensual",pd2:"hasta 3 botes · cada mes",
+    pn3:"Bimestral",pd3:"hasta 3 botes · cada 2 meses",
+    contact:"Datos de contacto",contactMaybe:"Datos de contacto",
+    name:"Nombre completo *",namePh:"Juan García",
+    address:"Dirección",addressPh:"123 Maple St, Provo, UT",
+    phone:"Número de teléfono *",phonePh:"(801) 555-0100",
+    email:"Correo electrónico (opcional)",emailPh:"juan@correo.com",
+    bins:"¿Cuántos botes de basura tienes?",
+    trashDay:"¿Qué día recogen tu basura?",
+    days:["Lunes","Martes","Miércoles","Jueves","Viernes","Sábado"],
+    dateLabel:"Elige la fecha de limpieza",
+    tipStrong:"Consejo:",
+    tipText:"Te recomendamos elegir el mismo día o el día siguiente a la recogida de basura para mejores resultados.",
+    weekdays:["Dom","Lun","Mar","Mié","Jue","Vie","Sáb"],
+    noDateSelected:"Ninguna fecha seleccionada",
+    selectedDate:"Seleccionada:",
+    why:"¿Por qué no te interesa?",whyPh:"Ej. El precio, ya tengo servicio...",
+    nameNo:"Nombre (opcional)",
+    btn:"Enviar →",btnNo:"Enviar comentario →",sending:"Enviando...",
+    st:"¡Gracias!",sb:"Nos pondremos en contacto pronto.",rst:"Nueva entrada",
+    errPlan:"Por favor selecciona un plan.",errContact:"Por favor ingresa nombre y teléfono.",errDate:"Por favor elige una fecha de limpieza."
+  }
 };
-let lang='en', interest='';
+
+let lang='en', interest='', selectedPlan='', selectedTrashDay='', selectedDate=null;
+let calYear, calMonth;
+
+function init(){
+  const now=new Date();
+  calYear=now.getFullYear();
+  calMonth=now.getMonth();
+  buildTrashDays();
+  renderCalendar();
+}
 
 function setLang(l){
   lang=l;
-  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.trim()===(l==='en'?'English':'Español')));
+  document.querySelectorAll('.lang-btn').forEach(b=>b.classList.toggle('active',b.textContent.includes(l==='en'?'English':'Español')));
   const d=T[l];
   document.getElementById('hero-title').textContent=d.title;
   document.getElementById('hero-body').textContent=d.body;
@@ -137,7 +326,16 @@ function setLang(l){
   document.getElementById('opt-yes').textContent=d.yes;
   document.getElementById('opt-maybe').textContent=d.maybe;
   document.getElementById('opt-no').textContent=d.no;
+  document.getElementById('lbl-plans').textContent=d.plans;
+  document.getElementById('pn1').textContent=d.pn1;
+  document.getElementById('pd1').textContent=d.pd1;
+  document.getElementById('pp2').textContent=d.pp2;
+  document.getElementById('pn2').textContent=d.pn2;
+  document.getElementById('pd2').textContent=d.pd2;
+  document.getElementById('pn3').textContent=d.pn3;
+  document.getElementById('pd3').textContent=d.pd3;
   document.getElementById('lbl-contact').textContent=d.contact;
+  document.getElementById('lbl-contact-maybe').textContent=d.contactMaybe;
   document.getElementById('lbl-name').textContent=d.name;
   document.getElementById('f-name').placeholder=d.namePh;
   document.getElementById('lbl-address').textContent=d.address;
@@ -147,60 +345,182 @@ function setLang(l){
   document.getElementById('lbl-email').textContent=d.email;
   document.getElementById('f-email').placeholder=d.emailPh;
   document.getElementById('lbl-bins').textContent=d.bins;
+  document.getElementById('lbl-trash-day').textContent=d.trashDay;
+  document.getElementById('lbl-date').textContent=d.dateLabel;
+  document.getElementById('tip-strong').textContent=d.tipStrong;
+  document.getElementById('tip-text').textContent=d.tipText;
   document.getElementById('lbl-why').textContent=d.why;
   document.getElementById('f-why').placeholder=d.whyPh;
   document.getElementById('lbl-name-no').textContent=d.nameNo;
   document.getElementById('btn-text').textContent=d.btn;
+  document.getElementById('btn-maybe-text').textContent=d.btn;
   document.getElementById('btn-no-text').textContent=d.btnNo;
   document.getElementById('s-title').textContent=d.st;
   document.getElementById('s-body').textContent=d.sb;
   document.getElementById('btn-rst').textContent=d.rst;
+  buildTrashDays();
+  renderCalendar();
+  updateDateLabel();
+}
+
+function buildTrashDays(){
+  const g=document.getElementById('trash-days-grid');
+  g.innerHTML='';
+  T[lang].days.forEach(day=>{
+    const d=document.createElement('div');
+    d.className='day-opt'+(selectedTrashDay===day?' selected':'');
+    d.textContent=day;
+    d.onclick=()=>selectTrashDay(day,d);
+    g.appendChild(d);
+  });
+}
+
+function selectTrashDay(day,el){
+  selectedTrashDay=day;
+  document.querySelectorAll('.day-opt').forEach(d=>d.classList.remove('selected'));
+  el.classList.add('selected');
 }
 
 function pick(val){
   interest=val;
   document.querySelectorAll('.radio-opt').forEach(o=>o.classList.remove('sel-yes','sel-maybe','sel-no'));
-  const sc=document.getElementById('section-contact');
-  const sn=document.getElementById('section-no');
+  ['section-pricing','section-contact','section-date','section-maybe','section-no'].forEach(id=>document.getElementById(id).className='hidden');
+  selectedPlan=''; selectedDate=null; selectedTrashDay='';
+  document.querySelectorAll('.plan').forEach(p=>p.classList.remove('selected'));
   if(val==='yes'){
     document.getElementById('opt-yes-el').classList.add('sel-yes');
-    sc.className='visible'; sn.className='hidden';
+    document.getElementById('section-pricing').className='visible';
   } else if(val==='maybe'){
     document.getElementById('opt-maybe-el').classList.add('sel-maybe');
-    sc.className='visible'; sn.className='hidden';
+    document.getElementById('section-maybe').className='visible';
   } else {
     document.getElementById('opt-no-el').classList.add('sel-no');
-    sc.className='hidden'; sn.className='visible';
+    document.getElementById('section-no').className='visible';
   }
 }
 
-function sendData(payload, btnId, statusId){
+function selectPlan(plan){
+  selectedPlan=plan;
+  document.querySelectorAll('.plan').forEach(p=>p.classList.remove('selected'));
+  document.getElementById('plan-'+plan).classList.add('selected');
+  document.getElementById('section-contact').className='visible';
+  setTimeout(()=>document.getElementById('section-contact').scrollIntoView({behavior:'smooth',block:'start'}),100);
+}
+
+// Show date section when contact fields are touched
+document.addEventListener('DOMContentLoaded',()=>{
+  ['f-name','f-phone'].forEach(id=>{
+    document.getElementById(id).addEventListener('blur',()=>{
+      if(interest==='yes' && selectedPlan && document.getElementById('section-date').className==='hidden'){
+        document.getElementById('section-date').className='visible';
+        setTimeout(()=>document.getElementById('section-date').scrollIntoView({behavior:'smooth',block:'start'}),100);
+      }
+    });
+  });
+  init();
+});
+
+// CALENDAR
+function renderCalendar(){
+  const months_en=["January","February","March","April","May","June","July","August","September","October","November","December"];
+  const months_es=["Enero","Febrero","Marzo","Abril","Mayo","Junio","Julio","Agosto","Septiembre","Octubre","Noviembre","Diciembre"];
+  const months=lang==='es'?months_es:months_en;
+  document.getElementById('cal-title').textContent=months[calMonth]+' '+calYear;
+
+  // Weekdays header
+  const wdContainer=document.getElementById('cal-weekdays');
+  wdContainer.innerHTML='';
+  T[lang].weekdays.forEach(d=>{
+    const el=document.createElement('div');
+    el.className='cal-weekday';
+    el.textContent=d;
+    wdContainer.appendChild(el);
+  });
+
+  const daysContainer=document.getElementById('cal-days');
+  daysContainer.innerHTML='';
+
+  const firstDay=new Date(calYear,calMonth,1).getDay();
+  const daysInMonth=new Date(calYear,calMonth+1,0).getDate();
+  const today=new Date(); today.setHours(0,0,0,0);
+
+  // Empty cells
+  for(let i=0;i<firstDay;i++){
+    const el=document.createElement('div');
+    el.className='cal-day empty';
+    daysContainer.appendChild(el);
+  }
+
+  for(let d=1;d<=daysInMonth;d++){
+    const date=new Date(calYear,calMonth,d);
+    const isSunday=date.getDay()===0;
+    const isPast=date<today;
+    const isToday=date.getTime()===today.getTime();
+    const isSelected=selectedDate&&date.getTime()===selectedDate.getTime();
+
+    const el=document.createElement('div');
+    let cls='cal-day';
+    if(isSunday||isPast) cls+=' disabled';
+    else if(isSelected) cls+=' selected';
+    else if(isToday) cls+=' today';
+
+    el.className=cls;
+    el.textContent=d;
+
+    if(!isSunday&&!isPast){
+      el.onclick=()=>{
+        selectedDate=new Date(calYear,calMonth,d);
+        updateDateLabel();
+        renderCalendar();
+      };
+    }
+    daysContainer.appendChild(el);
+  }
+}
+
+function updateDateLabel(){
+  const el=document.getElementById('selected-date-label');
+  if(selectedDate){
+    el.textContent=T[lang].selectedDate+' '+selectedDate.toLocaleDateString(lang==='es'?'es-MX':'en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'});
+    el.style.color='#1D9E75';
+  } else {
+    el.textContent=T[lang].noDateSelected;
+    el.style.color='#aaa';
+  }
+}
+
+function prevMonth(){
+  calMonth--;
+  if(calMonth<0){calMonth=11;calYear--;}
+  renderCalendar();
+}
+
+function nextMonth(){
+  calMonth++;
+  if(calMonth>11){calMonth=0;calYear++;}
+  renderCalendar();
+}
+
+function sendData(payload,btnId,statusId){
   const btn=document.getElementById(btnId);
   const status=document.getElementById(statusId);
   btn.disabled=true;
-  btn.textContent=T[lang].sending;
-  status.textContent='';
-  fetch(SCRIPT_URL, {
-    method:'POST',
-    mode:'no-cors',
-    headers:{'Content-Type':'application/json'},
-    body:JSON.stringify(payload)
-  }).then(()=>{
-    document.getElementById('form-body').style.display='none';
-    document.getElementById('success-msg').style.display='block';
-  }).catch(()=>{
-    btn.disabled=false;
-    btn.textContent=lang==='en'?'Submit →':'Enviar →';
-    status.textContent=lang==='en'?'Error sending. Try again.':'Error al enviar. Intenta de nuevo.';
-  });
+  btn.querySelector('span').textContent=T[lang].sending;
+  fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'application/json'},body:JSON.stringify(payload)})
+    .then(()=>{document.getElementById('form-body').style.display='none';document.getElementById('success-msg').style.display='block';})
+    .catch(()=>{btn.disabled=false;btn.querySelector('span').textContent=T[lang].btn;status.textContent=lang==='en'?'Error. Try again.':'Error. Intenta de nuevo.';});
 }
 
 function submitYes(){
   const n=document.getElementById('f-name').value.trim();
   const p=document.getElementById('f-phone').value.trim();
-  if(!n||!p){alert(lang==='en'?'Please enter name and phone.':'Por favor ingresa nombre y teléfono.');return;}
+  if(!selectedPlan){alert(T[lang].errPlan);return;}
+  if(!n||!p){alert(T[lang].errContact);return;}
+  if(!selectedDate){alert(T[lang].errDate);return;}
   sendData({
-    interest, lang,
+    interest,lang,plan:selectedPlan,
+    trashDay:selectedTrashDay,
+    cleaningDate:selectedDate.toLocaleDateString('en-US',{weekday:'long',year:'numeric',month:'long',day:'numeric'}),
     name:n,
     address:document.getElementById('f-address').value.trim(),
     phone:p,
@@ -210,26 +530,31 @@ function submitYes(){
   },'btn-submit','status-yes');
 }
 
+function submitMaybe(){
+  const n=document.getElementById('f-name-m').value.trim();
+  const p=document.getElementById('f-phone-m').value.trim();
+  if(!n||!p){alert(T[lang].errContact);return;}
+  sendData({interest:'maybe',lang,plan:'',trashDay:'',cleaningDate:'',name:n,address:'',phone:p,email:'',bins:'',why:''},'btn-maybe','status-maybe');
+}
+
 function submitNo(){
-  sendData({
-    interest:'no', lang,
-    name:document.getElementById('f-name-no').value.trim(),
-    address:'', phone:'', email:'', bins:'',
-    why:document.getElementById('f-why').value.trim()
-  },'btn-no','status-no');
+  sendData({interest:'no',lang,plan:'',trashDay:'',cleaningDate:'',name:document.getElementById('f-name-no').value.trim(),address:'',phone:'',email:'',bins:'',why:document.getElementById('f-why').value.trim()},'btn-no','status-no');
 }
 
 function rst(){
-  ['f-name','f-address','f-phone','f-email','f-why','f-name-no'].forEach(id=>document.getElementById(id).value='');
+  ['f-name','f-address','f-phone','f-email','f-why','f-name-no','f-name-m','f-phone-m'].forEach(id=>document.getElementById(id).value='');
   document.getElementById('f-bins').value='';
   document.querySelectorAll('.radio-opt').forEach(o=>o.classList.remove('sel-yes','sel-maybe','sel-no'));
-  document.getElementById('section-contact').className='hidden';
-  document.getElementById('section-no').className='hidden';
+  document.querySelectorAll('.plan').forEach(p=>p.classList.remove('selected'));
+  ['section-pricing','section-contact','section-date','section-maybe','section-no'].forEach(id=>document.getElementById(id).className='hidden');
   document.getElementById('form-body').style.display='block';
   document.getElementById('success-msg').style.display='none';
   document.getElementById('btn-submit').disabled=false;
   document.getElementById('btn-text').textContent=T[lang].btn;
-  interest='';
+  interest=''; selectedPlan=''; selectedDate=null; selectedTrashDay='';
+  buildTrashDays();
+  renderCalendar();
+  updateDateLabel();
 }
 </script>
 </body>
